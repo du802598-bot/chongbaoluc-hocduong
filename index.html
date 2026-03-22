@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chống Bạo Lực Học Đường</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+
+body{
+    background:linear-gradient(120deg,#4facfe,#00f2fe);
+    color:#333;
+    transition:0.4s;
+}
+
+/* DARK MODE */
+body.dark{
+    background:#121212;
+    color:white;
+}
+
+/* SCROLL BAR */
+#progress{
+    position:fixed;
+    top:0;
+    left:0;
+    height:5px;
+    background:#00f2fe;
+    width:0%;
+    z-index:9999;
+}
+
+/* HEADER */
+header{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    color:white;
+}
+
+header h1{
+    font-size:50px;
+    animation:fade 1s;
+}
+
+header p{
+    margin-top:10px;
+}
+
+/* NAV */
+nav{
+    position:sticky;
+    top:0;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(10px);
+    padding:10px;
+    text-align:center;
+}
+
+nav a{
+    color:white;
+    margin:10px;
+    text-decoration:none;
+}
+
+nav button{
+    margin-left:20px;
+}
+
+/* SECTION */
+.container{
+    width:85%;
+    margin:auto;
+}
+
+.section{
+    background:rgba(255,255,255,0.2);
+    backdrop-filter:blur(10px);
+    padding:20px;
+    margin:30px 0;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    opacity:0;
+    transform:translateY(40px);
+    transition:0.6s;
+}
+
+.section.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* VIDEO */
+iframe{
+    width:100%;
+    height:400px;
+    border-radius:15px;
+}
+
+/* FORM */
+input, textarea{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    border-radius:8px;
+    border:none;
+}
+
+button{
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#00f2fe;
+    cursor:pointer;
+}
+
+/* BACK TO TOP */
+#topBtn{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    display:none;
+}
+
+/* ANIMATION */
+@keyframes fade{
+    from{opacity:0}
+    to{opacity:1}
+}
+</style>
+</head>
+
+<body>
+
+<div id="progress"></div>
+
+<header>
+    <h1>NÓI KHÔNG VỚI BẠO LỰC</h1>
+    <p>Xây dựng trường học văn minh</p>
+</header>
+
+<nav>
+    <a href="#nguyen">Nguyên nhân</a>
+    <a href="#hauqua">Hậu quả</a>
+    <a href="#giaiphap">Giải pháp</a>
+    <a href="#video">Video</a>
+    <a href="#form">Góp ý</a>
+    <button onclick="toggleDark()">🌙</button>
+</nav>
+
+<div class="container">
+
+<div class="section" id="nguyen">
+<h2>Nguyên nhân</h2>
+<p>Áp lực, môi trường, thiếu kỹ năng sống...</p>
+</div>
+
+<div class="section" id="hauqua">
+<h2>Hậu quả</h2>
+<p>Ảnh hưởng tâm lý, học tập, tương lai...</p>
+</div>
+
+<div class="section" id="giaiphap">
+<h2>Giải pháp</h2>
+<p>Chia sẻ, học kỹ năng sống, xây dựng môi trường tích cực</p>
+<button onclick="alert('Bạn đã cam kết!')">Cam kết</button>
+</div>
+
+<div class="section" id="video">
+<h2>Video tuyên truyền</h2>
+<iframe src="https://www.youtube.com/embed/7V9n2n9X3F4"></iframe>
+</div>
+
+<div class="section" id="form">
+<h2>Gửi ý kiến</h2>
+<form onsubmit="saveData(event)">
+<input id="name" placeholder="Tên" required>
+<input id="email" type="email" placeholder="Email" required>
+<textarea id="msg" placeholder="Nội dung"></textarea>
+<button>Gửi</button>
+</form>
+
+<div id="data"></div>
+</div>
+
+</div>
+
+<button id="topBtn" onclick="topFunction()">↑</button>
+
+<script>
+/* SCROLL EFFECT */
+const secs = document.querySelectorAll(".section");
+
+window.addEventListener("scroll", ()=>{
+    let scroll = window.scrollY;
+
+    secs.forEach(sec=>{
+        if(scroll > sec.offsetTop - 400){
+            sec.classList.add("show");
+        }
+    });
+
+/* PROGRESS BAR */
+    let height = document.body.scrollHeight - window.innerHeight;
+    let scrolled = (scroll / height) * 100;
+    document.getElementById("progress").style.width = scrolled + "%";
+
+/* TOP BUTTON */
+    document.getElementById("topBtn").style.display = scroll>300?"block":"none";
+});
+
+/* DARK MODE */
+function toggleDark(){
+    document.body.classList.toggle("dark");
+}
+
+/* BACK TO TOP */
+function topFunction(){
+    window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* SAVE FORM */
+function saveData(e){
+    e.preventDefault();
+
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let msg = document.getElementById("msg").value;
+
+    let data = {name,email,msg};
+
+    let list = JSON.parse(localStorage.getItem("data")) || [];
+    list.push(data);
+
+    localStorage.setItem("data", JSON.stringify(list));
+
+    alert("Đã lưu ý kiến!");
+
+    showData();
+}
+
+/* HIỂN THỊ */
+function showData(){
+    let list = JSON.parse(localStorage.getItem("data")) || [];
+    let html="";
+
+    list.forEach(d=>{
+        html += `<p><b>${d.name}</b>: ${d.msg}</p>`;
+    });
+
+    document.getElementById("data").innerHTML = html;
+}
+
+showData();
+</script>
+
+</body>
+</html>
